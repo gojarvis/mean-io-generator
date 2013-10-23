@@ -4,23 +4,23 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 
 
-var JarvisGenerator = module.exports = function JarvisGenerator(args, options, config) {
+var MeanGenerator = module.exports = function MeanGenerator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments); 
 
   this.appPath = this.env.options.appPath;
 
-  this.headerFile = this.engine(this.read('jade/_app/views/includes/head.jade'),
+  this.headerFile = this.engine(this.read('_app/_views/jade/includes/head.jade'),
      this);
 
-  this.footerFile = this.engine(this.read('jade/_app/views/includes/foot.jade'),
+  this.footerFile = this.engine(this.read('_app/_views/jade/includes/foot.jade'),
      this);
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
 };
 
-util.inherits(JarvisGenerator, yeoman.generators.Base);
+util.inherits(MeanGenerator, yeoman.generators.Base);
 
-JarvisGenerator.prototype.askForAppName = function askFor() {
+MeanGenerator.prototype.askForAppName = function askFor() {
   var cb = this.async();
 
   this.prompt([{
@@ -37,7 +37,7 @@ JarvisGenerator.prototype.askForAppName = function askFor() {
   }.bind(this));
 };
 
-JarvisGenerator.prototype.askForBootstrap = function askFor() {
+MeanGenerator.prototype.askForBootstrap = function askFor() {
   var cb = this.async();
 
   this.prompt([{
@@ -61,7 +61,7 @@ JarvisGenerator.prototype.askForBootstrap = function askFor() {
   }.bind(this));
 };
 
-JarvisGenerator.prototype.askForDatabase = function askFor() {
+MeanGenerator.prototype.askForDatabase = function askFor() {
   var cb = this.async();
 
   this.prompt([{
@@ -79,7 +79,7 @@ JarvisGenerator.prototype.askForDatabase = function askFor() {
   }.bind(this));
 };
 
-JarvisGenerator.prototype.askForConnectionString = function askFor() {
+MeanGenerator.prototype.askForConnectionString = function askFor() {
   var cb = this.async();
 
   this.prompt([{
@@ -96,7 +96,7 @@ JarvisGenerator.prototype.askForConnectionString = function askFor() {
   }.bind(this));
 };
 
-JarvisGenerator.prototype.askForTemplatingEngine = function askFor() {
+MeanGenerator.prototype.askForTemplatingEngine = function askFor() {
   var cb = this.async();
 
   this.prompt([{
@@ -114,7 +114,7 @@ JarvisGenerator.prototype.askForTemplatingEngine = function askFor() {
   }.bind(this));
 };
 
-JarvisGenerator.prototype.bootstrapJS = function bootstrapJS() {
+MeanGenerator.prototype.bootstrapJS = function bootstrapJS() {
   if (!this.bootstrap) {
     return;  // Skip if disabled.
   }
@@ -126,28 +126,28 @@ JarvisGenerator.prototype.bootstrapJS = function bootstrapJS() {
   // ]);
 };
 
-JarvisGenerator.prototype.app = function app() {
+MeanGenerator.prototype.app = function app() {
     this.mkdir('app');
     this.mkdir('app/controllers');
     this.mkdir('app/models');
     this.mkdir('app/views');
 
-    this.directory('common/_app/controllers', 'app/controllers');
-    this.directory(this.templateEngine + '/_app/views', 'app/views');
+    this.directory('_app/_controllers', 'app/controllers');
+    this.directory('_app/_views/' + this.templateEngine, 'app/views');
     
 
-    this.template(this.dbAdapter + '/_app/models/article.js', 'app/models/article.js');
-    this.template(this.dbAdapter + '/_app/models/user.js', 'app/models/user.js');
+    this.template('_app/_models/'+ this.dbAdapter + '/article.js', 'app/models/article.js');
+    this.template('_app/_models/'+ this.dbAdapter + '/user.js', 'app/models/user.js');
 
     this.mkdir('config');
 
-    this.directory(this.dbAdapter + '/_config', 'config');
-    this.template(this.dbAdapter + '/_config/config.js', 'config/config.js');
+    this.directory('_config/' + this.dbAdapter, 'config');
+    this.template('_config/'+ this.dbAdapter + '/config.js', 'config/config.js');
 
 
     this.mkdir('public');
     if (this.compassBootstrap){
-        this.directory('common/_public', 'public');
+        this.directory('_public', 'public');
     }
     else{
         this.directory('nosass/_public', 'public');
@@ -155,14 +155,14 @@ JarvisGenerator.prototype.app = function app() {
    
     
 
-    this.copy('common/_package.json', 'package.json');
-    this.copy('common/_bower.json', 'bower.json');
-    this.copy('common/_.bowerrc', '.bowerrc');
-    this.copy('common/_server.js', 'server.js');
-    this.copy('common/_Gruntfile.js', 'Gruntfile.js');
-    this.copy('common/_README.md', 'README.md');
-    this.copy('common/_Procfile', 'Procfile');
-    this.copy('common/_travis.yml', 'travis.yml');
+    this.copy('_package.json', 'package.json');
+    this.copy('_bower.json', 'bower.json');
+    this.copy('_.bowerrc', '.bowerrc');
+    this.copy('_server.js', 'server.js');
+    this.copy('_Gruntfile.js', 'Gruntfile.js');
+    this.copy('_README.md', 'README.md');
+    this.copy('_Procfile', 'Procfile');
+    this.copy('_travis.yml', 'travis.yml');
 
     // this.on('end', function() {
     //     this.installDependencies();
